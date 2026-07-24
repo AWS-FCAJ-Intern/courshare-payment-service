@@ -8,8 +8,8 @@ RUN npm ci
 
 COPY tsconfig.json ./
 COPY src ./src/
+RUN npx prisma generate
 RUN npm run build
-RUN npm run prisma:generate
 
 # Stage 2: Production runtime image
 FROM node:20-alpine
@@ -18,8 +18,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
 
-COPY prisma ./prisma/
-RUN npm run prisma:generate
+# Copy generated Prisma Client from build stage to avoid downloading CLI at runtime
+COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=build /app/node_modules/@prisma/client ./node_modules/@prisma/client
 
 COPY --from=build /app/dist ./dist
 
