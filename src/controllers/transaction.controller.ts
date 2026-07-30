@@ -2,8 +2,7 @@ import { Request, Response } from "express";
 import * as paymentService from "../services/payment.service";
 
 export async function getTransactionsByUserId(req: Request, res: Response) {
-  const { userId } = req.query;
-  console.log(`Fetching transactions for user ID: ${userId}`);
+  const userId = req.headers["x-user-id"] as string;
   try {
     const transactions = await paymentService.getTransactionsByUserId(userId?.toString() ?? "");
     res.status(200).json({ message: "Transactions retrieved successfully", transactions });

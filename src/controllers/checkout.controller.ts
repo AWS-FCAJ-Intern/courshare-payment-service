@@ -6,9 +6,9 @@ export async function createCheckoutSession(
     res: Response
 ) {
     // After have course api need to change the amount to be fetched from course api based on courseId
-    console.log(`Creating checkout session for user ID: ${req.body.userId}, course ID: ${req.body.courseId}`);
     try {
-        const { userId, courseId, amount, currency, provider } = req.body;
+        const userId = req.headers["x-user-id"] as string;
+        const { courseId, amount, currency, provider } = req.body;
 
         const result = await paymentServices.createCheckoutSession({
             userId,
