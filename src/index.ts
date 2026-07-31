@@ -30,6 +30,15 @@ app.get("/", (_req: Request, res: Response) => {
     status: "UP"
   });
 });
+// health check endpoint
+app.use("/health", (_req: Request, res: Response) => {
+  res.json({
+    service: "payment-service",
+    status: "UP"
+  });
+});
+
+// Routes
 
 app.use("/checkout", checkoutRouter);
 app.use("/transactions",transactionRouter);
