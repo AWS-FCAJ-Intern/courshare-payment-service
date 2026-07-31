@@ -23,22 +23,13 @@ app.use(express.json());
 // Swagger documentation endpoint
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// Roots/Health check endpoint
+//Health check endpoint
 app.get("/", (_req: Request, res: Response) => {
-  res.json({
-    service: "payment-service",
-    status: "UP"
+  return res.json({
+    service: 'enrollment-service',
+    status: 'UP'
   });
 });
-// health check endpoint
-app.use("/health", (_req: Request, res: Response) => {
-  res.json({
-    service: "payment-service",
-    status: "UP"
-  });
-});
-
-// Routes
 
 app.use("/checkout", checkoutRouter);
 app.use("/transactions",transactionRouter);
