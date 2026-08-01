@@ -4,6 +4,10 @@ import { Prisma, PaymentStatus } from "@prisma/client";
 export class PaymentRepository {
   async create(data: CreatePaymentDto) {
     try {
+      const check = await this.verifyBeforeCreatingPayment(data.userId, data.courseId);
+      if (check) {
+        throw new Error("Payment already exists for this user and course");
+      }
       return prisma.payment.create({
         data: data,
       });
@@ -58,6 +62,22 @@ export class PaymentRepository {
       });
     } catch (error) {
       console.error("Error retrieving transactions:", error);
+      throw error;
+    }
+  }
+  async verifyBeforeCreatingPayment(userId: string, courseId: string) {
+    try {
+      const existingPayment = await prisma.payment.findFirst({
+        where: {
+          userId: userId,
+          courseId: courseId,
+          status: PaymentStatus.SUCCESS,
+        },
+      });
+      return true ? existingPayment !== null : false;
+    }
+    catch (error) {
+      console.error("Error verifying payment:", error);
       throw error;
     }
   }
