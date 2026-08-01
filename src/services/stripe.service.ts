@@ -10,8 +10,8 @@ export async function createStripeCheckoutSession(
     const unitAmount = Math.round(+payment.amount * 100);
     const session = await stripe.checkout.sessions.create(
       {
-        success_url: `${process.env.FRONTEND_URL}/payment/success?`,
-        cancel_url: `${process.env.FRONTEND_URL}/payment/cancel`,
+        success_url: `${process.env.FRONTEND_URL}payment/success?`,
+        cancel_url: `${process.env.FRONTEND_URL}payment/cancel`,
         mode: "payment",
         line_items: [
           {
