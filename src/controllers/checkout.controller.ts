@@ -22,10 +22,10 @@ export async function createCheckoutSession(
             provider: fprovider
         });
 
-        res.status(200).json({ message: "Stripe Checkout Session created", StripeCheckoutSessionId: result.id, StripeSessionUrl: result.url });
+        return res.status(200).json({ message: "Stripe Checkout Session created", StripeCheckoutSessionId: result.id, StripeSessionUrl: result.url });
     }catch (error) {
         console.error("Error creating checkout session:", error);
-        res.status(500).send({ message: error instanceof Error ? error.message : "Checkout session creation failed" });
+        return res.status(500).send({ message: error instanceof Error ? error.message : "Checkout session creation failed" });
     }
 }
 export async function verifyCheckout(req: Request, res: Response) {
