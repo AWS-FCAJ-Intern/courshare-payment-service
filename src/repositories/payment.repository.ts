@@ -3,10 +3,11 @@ import { CreatePaymentDto } from "../dtos/payment.dto";
 import { Prisma, PaymentStatus } from "@prisma/client";
 export class PaymentRepository {
   async create(data: CreatePaymentDto) {
-    try
-    {return prisma.payment.create({
-      data: data,
-    });}catch (error) {
+    try {
+      return prisma.payment.create({
+        data: data,
+      });
+    } catch (error) {
       console.error("Error creating payment:", error);
       throw error;
     }
