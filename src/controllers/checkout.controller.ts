@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as paymentServices from "../services/payment.service";
-
+import { PaymentProvider} from "@prisma/client";
 export async function createCheckoutSession(
     req: Request,
     res: Response
@@ -9,13 +9,17 @@ export async function createCheckoutSession(
     try {
         const userId = req.headers["x-user-id"] as string;
         const { courseId, amount, currency, provider } = req.body;
+        if (!courseId || !amount || !currency) {
+            return res.status(400).send({ message: "Missing required fields: provider, courseId, amount, or currency" });
+        }
+        const fprovider = provider ? provider : PaymentProvider.STRIPE;
 
         const result = await paymentServices.createCheckoutSession({
             userId,
             courseId,
             amount,
             currency,
-            provider
+            provider: fprovider
         });
 
         res.status(200).json({ message: "Stripe Checkout Session created", StripeCheckoutSessionId: result.id, StripeSessionUrl: result.url });
