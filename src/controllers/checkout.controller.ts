@@ -9,13 +9,17 @@ export async function createCheckoutSession(
     try {
         const userId = req.headers["x-user-id"] as string;
         const { courseId, amount, currency, provider } = req.body;
+        if (!courseId || !amount || !currency) {
+            return res.status(400).send({ message: "Missing required fields: provider, courseId, amount, or currency" });
+        }
+        const fprovider = provider ? provider : "stripe";
 
         const result = await paymentServices.createCheckoutSession({
             userId,
             courseId,
             amount,
             currency,
-            provider
+            provider: fprovider
         });
 
         res.status(200).json({ message: "Stripe Checkout Session created", StripeCheckoutSessionId: result.id, StripeSessionUrl: result.url });
